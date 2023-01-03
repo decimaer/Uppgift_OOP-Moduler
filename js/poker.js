@@ -71,5 +71,18 @@ class Deck {
 
 const pokerDeck = new Deck;
 
+
+// Del 1
 console.log('sorted', pokerDeck.sortedDeck)
 console.log('shuffled', pokerDeck.shuffledDeck)
+
+// Del 2
+const slim = pokerDeck.shuffledDeck.splice(0, 5);
+const luke = pokerDeck.shuffledDeck.splice(0, 5);
+
+console.log(slim)
+console.log(luke)
+console.log(pokerDeck.shuffledDeck)
+console.log(slim.reduce((acc, {value: cur}) => acc + cur, 0))
+console.log(luke.reduce((acc, {value: cur}) => acc + cur, 0))
+
