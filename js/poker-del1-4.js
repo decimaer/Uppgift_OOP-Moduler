@@ -58,7 +58,7 @@ class Deck {
         { value: 13, suit: '♠', name: 'King of spades' },
         { value: 14, suit: '♠', name: 'Ace of spades' },
     ];
-    
+    shuffledDeck
 
     constructor() {
         this.shuffledDeck = this.shuffle(this.sortedDeck)
@@ -69,77 +69,44 @@ class Deck {
     }
 }
 
-class Player {
-    hand;
-    constructor(name) {
-        this.name = name;
-    }
-}
+const pokerDeck = new Deck;
+
+
+// Del 1
+console.log('sorted', pokerDeck.sortedDeck)
+console.log('shuffled', pokerDeck.shuffledDeck)
+
+// Del 2
+const slim = pokerDeck.shuffledDeck.splice(0, 5);
+const luke = pokerDeck.shuffledDeck.splice(0, 5);
+
+console.log(slim)
+console.log(luke)
+console.log(pokerDeck.shuffledDeck)
+console.log(slim.reduce((acc, {value: cur}) => acc + cur, 0))
+console.log(luke.reduce((acc, {value: cur}) => acc + cur, 0))
+
+// Del 3
+const discardedCards = [];
+discardedCards.unshift(...slim.splice(0, 2));
+discardedCards.unshift(...luke.splice(0, 2));
+
+slim.unshift(...pokerDeck.shuffledDeck.splice(0, 2));
+luke.unshift(...pokerDeck.shuffledDeck.splice(0, 2));
+
+console.log(discardedCards)
+console.log(pokerDeck.shuffledDeck)
+console.log(slim.reduce((acc, {value: cur}) => acc + cur, 0))
+console.log(luke.reduce((acc, {value: cur}) => acc + cur, 0))
+
+// Del 4
+slim.splice(0, slim.length)
+luke.splice(0, luke.length)
+
+console.log(pokerDeck.shuffle(pokerDeck.sortedDeck))
+
+// Del 5
 
 class Dealer {
-    pokerDeck = new Deck;
-
-    constructor() {
-        
-    }
-
-    dealCards = function(amount) {
-        return this.pokerDeck.shuffledDeck.splice(0, amount);
-    }
+    
 }
-
-
-class Validation {
-
-    static sumOfRanks = function(hand) {
-        return hand.reduce((acc, {value: cur}) => acc + cur, 0)
-    }
-
-    static check = function (players) {
-        if (!players) return;
-
-        const rankingHands = players
-            .map(player => {
-                return {name: player.name, points: this.sumOfRanks(player.hand)}
-            })
-            .sort((a, b) => b.points - a.points);
-
-        return rankingHands;
-    }
-}
-
-class Game {
-    players = [];
-
-    dealer = new Dealer;
-
-    constructor() {
-
-    }
-
-    startGame = function() {
-        console.log('hej')
-        this.players.forEach(player => player.hand = this.dealer.dealCards(5))
-
-        const winner = Validation.check(this.players);
-
-        console.log(`Winner is ${winner[0].name} with ${winner[0].points} points`)
-    }
-
-    addPlayer = function(playerName) {
-        this.players.push(new Player(playerName))
-    }
-}
-
-const game = new Game;
-
-game.addPlayer('Slim');
-game.addPlayer('Luke');
-
-game.startGame();
-
-
-console.log(game.players)
-/* let slim = dealer.dealCards(5)
-let luke = dealer.dealCards(5)
-console.log(Validation.check([slim, luke])) */
