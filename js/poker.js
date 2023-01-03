@@ -86,3 +86,15 @@ console.log(pokerDeck.shuffledDeck)
 console.log(slim.reduce((acc, {value: cur}) => acc + cur, 0))
 console.log(luke.reduce((acc, {value: cur}) => acc + cur, 0))
 
+// Del 3
+const discardedCards = [];
+discardedCards.unshift(...slim.splice(0, 2));
+discardedCards.unshift(...luke.splice(0, 2));
+
+slim.unshift(...pokerDeck.shuffledDeck.splice(0, 2));
+luke.unshift(...pokerDeck.shuffledDeck.splice(0, 2));
+
+console.log(discardedCards)
+console.log(pokerDeck.shuffledDeck)
+console.log(slim.reduce((acc, {value: cur}) => acc + cur, 0))
+console.log(luke.reduce((acc, {value: cur}) => acc + cur, 0))
