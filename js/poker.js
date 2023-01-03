@@ -98,3 +98,9 @@ console.log(discardedCards)
 console.log(pokerDeck.shuffledDeck)
 console.log(slim.reduce((acc, {value: cur}) => acc + cur, 0))
 console.log(luke.reduce((acc, {value: cur}) => acc + cur, 0))
+
+// Del 4
+slim.splice(0, slim.length)
+luke.splice(0, luke.length)
+
+console.log(pokerDeck.shuffle(pokerDeck.sortedDeck))
