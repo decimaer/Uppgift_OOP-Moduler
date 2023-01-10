@@ -1,7 +1,4 @@
-"use strict";
-
-const btnAddPlayer = document.getElementById("btnAddPlayer");
-const inputAddPlayer = document.getElementById("inputAddPlayer");
+import pokerView from "./pokerView.js";
 
 class Deck {
 	sortedDeck = [
@@ -128,25 +125,21 @@ class Game {
 	};
 
 	addPlayer = function (playerName) {
+		//todo: validate player name
 		this.players.push(new Player(playerName));
 	};
 }
 
 const game = new Game();
 
-btnAddPlayer.addEventListener("click", function (e) {
-	e.preventDefault();
-
-	const playerName = inputAddPlayer.value;
-	if (!playerName) return;
-
+const controlAddNewPlayer = function (playerName) {
 	console.log(playerName);
 	game.addPlayer(playerName);
 
-	inputAddPlayer.value = "";
+	pokerView.renderGame(game.players);
+};
 
-	console.log(`New player \"${playerName}\" added!`);
-});
+pokerView.addHandlerRender(controlAddNewPlayer);
 
 // game.addPlayer("Slim");
 // game.addPlayer("Luke");
