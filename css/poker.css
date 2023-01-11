@@ -1,3 +1,24 @@
 #inputAddPlayer {
 	width: 15ch;
 }
+
+#outputPokerGame {
+	margin: 1.5em;
+}
+
+.playerRow span {
+	font-family: Courier;
+	white-space: pre;
+}
+
+.cardHand {
+	font-size: 1.5em;
+}
+
+.red {
+	color: red;
+}
+
+.black {
+	color: black;
+}
