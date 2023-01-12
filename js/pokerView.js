@@ -2,12 +2,10 @@ class PokerView {
 	inputAddPlayer = document.getElementById("inputAddPlayer");
 	btnAddPlayer = document.getElementById("btnAddPlayer");
 	btnStartGame = document.getElementById("btnStartGame");
+	btnDiscardCards = document.getElementById("btnDiscardCards");
 	outputPokerGame = document.getElementById("outputPokerGame");
 	outputNodes = document.getElementById("outputPokerGame").childNodes;
 
-	markupPlayerRow() {
-		return;
-	}
 	/**
 	 * Renders the game area in the DOM
 	 * @param {Array} playersArray the array of player objects from the game object
@@ -17,7 +15,6 @@ class PokerView {
 		let markup = "";
 
 		playersArray.forEach((player) => {
-			console.log(player.name.padEnd(20));
 			markup += `
 				<div class="playerRow" id="${player.name}">
 				<span>${player.name.padEnd(15)}</span>
@@ -29,7 +26,7 @@ class PokerView {
 										card.suit === "♦" || card.suit === "♥"
 											? "red"
 											: "black";
-									return `<span class="${className}">${card.cardIcon}</span>`;
+									return `<span class="card ${className}">${card.cardIcon}</span>`;
 								})
 								.join("")
 								.padEnd(10)
@@ -65,6 +62,29 @@ class PokerView {
 
 	addHandlerStartGame(handler) {
 		this.btnStartGame.addEventListener("click", handler);
+	}
+
+	addHandlerSelectCards(handler) {
+		this.outputNodes.forEach((node) => {
+			if (!node.classList?.contains("playerRow")) return;
+
+			node.addEventListener("click", function (e) {
+				e.target.classList.toggle("selectedCard");
+			});
+		});
+	}
+
+	handlerDiscardCards(handler, _) {
+		const cardHands = this.outputPokerGame.querySelectorAll(".selectedCard");
+
+		handler(cardHands);
+	}
+
+	addHandlerDiscardCards(handler) {
+		this.btnDiscardCards.addEventListener(
+			"click",
+			this.handlerDiscardCards.bind(this, handler)
+		);
 	}
 }
 

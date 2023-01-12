@@ -1,3 +1,11 @@
+:root {
+	--selected-card: lightblue;
+}
+
+* {
+	box-sizing: border-box;
+}
+
 #inputAddPlayer {
 	width: 15ch;
 }
@@ -13,6 +21,17 @@
 
 .cardHand {
 	font-size: 1.5em;
+	height: fit-content;
+}
+
+.card {
+	display: inline-block;
+	/* height: 1.5em; */
+}
+
+.card:hover {
+	background-color: var(--selected-card);
+	cursor: pointer;
 }
 
 .red {
@@ -21,4 +40,8 @@
 
 .black {
 	color: black;
+}
+
+.selectedCard {
+	background-color: var(--selected-card);
 }
