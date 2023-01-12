@@ -3,6 +3,8 @@ class PokerView {
 	btnAddPlayer = document.getElementById("btnAddPlayer");
 	btnStartGame = document.getElementById("btnStartGame");
 	btnDiscardCards = document.getElementById("btnDiscardCards");
+	btnEndRound = document.getElementById("btnEndRound");
+	btnNewRound = document.getElementById("btnNewRound");
 	outputPokerGame = document.getElementById("outputPokerGame");
 	outputNodes = document.getElementById("outputPokerGame").childNodes;
 
@@ -36,13 +38,16 @@ class PokerView {
 			`;
 		});
 		this.outputPokerGame.innerHTML = markup;
-
-		/* 		const markup = playersArray
-			.map((player) => `<p>${player.name}</p>`)
-			.join("");
-		this.outputPokerGame.innerHTML = markup;
-	 */
 	}
+
+	toggleDisableButton(button) {
+		if (button.getAttribute("disabled") === null) {
+			button.setAttribute("disabled", "");
+		} else {
+			button.removeAttribute("disabled");
+		}
+	}
+
 	addHandlerRender(handler) {
 		btnAddPlayer.addEventListener("click", function (e) {
 			e.preventDefault();
@@ -60,11 +65,21 @@ class PokerView {
 		});
 	}
 
-	addHandlerStartGame(handler) {
-		this.btnStartGame.addEventListener("click", handler);
+	#startGame(handler) {
+		handler();
+
+		this.toggleDisableButton(this.btnStartGame);
+		this.toggleDisableButton(this.btnDiscardCards);
 	}
 
-	addHandlerSelectCards(handler) {
+	addHandlerStartGame(handler) {
+		this.btnStartGame.addEventListener(
+			"click",
+			this.#startGame.bind(this, handler)
+		);
+	}
+
+	addHandlerSelectCards() {
 		this.outputNodes.forEach((node) => {
 			if (!node.classList?.contains("playerRow")) return;
 
@@ -74,16 +89,19 @@ class PokerView {
 		});
 	}
 
-	handlerDiscardCards(handler, _) {
+	#handlerDiscardCards(handler) {
 		const cardHands = this.outputPokerGame.querySelectorAll(".selectedCard");
 
 		handler(cardHands);
+
+		this.toggleDisableButton(this.btnDiscardCards);
+		this.toggleDisableButton(this.btnEndRound);
 	}
 
 	addHandlerDiscardCards(handler) {
 		this.btnDiscardCards.addEventListener(
 			"click",
-			this.handlerDiscardCards.bind(this, handler)
+			this.#handlerDiscardCards.bind(this, handler)
 		);
 	}
 }
