@@ -79,8 +79,8 @@ class Dealer extends Deck {
 
 class Player {
 	hand;
-	roundPoints;
-	totalPoints;
+	roundRank = { handName: "", handValue: 0, handRank: 0 };
+	totalPoints = [];
 
 	constructor(name) {
 		this.name = name;
@@ -88,12 +88,80 @@ class Player {
 }
 
 class Validation {
-	static sumOfRanks = function (hand) {
-		return hand.reduce((acc, { value: cur }) => acc + cur, 0);
+	static rankPokerHands = [
+		"three of a kind",
+		"two pair",
+		"one pair",
+		"high card",
+	];
+
+	static sumOfCardValues = function (cards) {
+		return cards.reduce((acc, { value: cur }) => acc + cur, 0);
 	};
 
-	static check = function (player) {
-		if (!player) return;
+	static evaluateHand(hand) {
+		let cardsToEvaluate = [];
+
+		hand.forEach((card, i, arr) => {
+			const currentArray = [...arr];
+
+			currentArray.splice(i, 1);
+
+			cardsToEvaluate.push(
+				...currentArray.filter((card2) => card2.value === card.value)
+			);
+		});
+		console.log(cardsToEvaluate, cardsToEvaluate.length);
+		if (cardsToEvaluate.length === 4)
+			return {
+				handName: "two pair",
+				handValue: this.sumOfCardValues(cardsToEvaluate),
+			};
+		if (cardsToEvaluate.length === 3)
+			return {
+				handName: "three of a kind",
+				handValue: this.sumOfCardValues(cardsToEvaluate),
+			};
+		if (cardsToEvaluate.length === 2)
+			return {
+				handName: "one pair",
+				handValue: this.sumOfCardValues(cardsToEvaluate),
+			};
+		else return undefined;
+	}
+
+	static highCard(hand) {
+		return [...hand].sort((a, b) => b.value - a.value).at(0);
+	}
+
+	static check = function (players) {
+		// check which is the highest hand, and return point
+		const rankedPlayers = players.map((player) => {
+			const evaluatedHand = this.evaluateHand(player.hand);
+
+			if (evaluatedHand) {
+				player.roundRank.handName = evaluatedHand.handName;
+				player.roundRank.handValue = evaluatedHand.handValue;
+				return player;
+			} else {
+				player.roundRank.handName = "high card";
+				player.roundRank.handValue = this.highCard(player.hand).value;
+				return player;
+			}
+		});
+		console.log(rankedPlayers);
+		// evaluate which player has the highest hand. If players have the same, check the hand's highest card and so on.
+
+		// rankedPlayers.forEach((player, _, players) => {});
+
+		// const sortedPlayers = [...rankedPlayers].sort((a, b) => {
+		// 	if (a.roundRank === b.roundRank) {
+		// 	}
+		// });
+
+		// return array of ranking of players hands.
+		return rankedPlayers;
+		/* 		if (!player) return;
 
 		const rankingHands = player
 			.map((player) => {
@@ -101,7 +169,39 @@ class Validation {
 			})
 			.sort((a, b) => b.points - a.points);
 
-		return rankingHands;
+		return rankingHands; */
+	};
+
+	//return array of players with totalPoints array, add 1 for win or 0 for lose
+	static win = function (players) {
+		//set 0 to all players
+		const playersWithPoints = [...players];
+		playersWithPoints.forEach((player) => {
+			player.totalPoints.push(0);
+		});
+
+		// Sort array to determine winner
+		const sortedPlayers = [...playersWithPoints].sort(
+			(a, b) => a.roundRank.handRank - b.roundRank.handRank
+		);
+
+		// if at least two top ranked players have the same rank, it's a tie, and noone wins
+		if (
+			playersWithPoints[0].roundRank.handRank ===
+			playersWithPoints[1].roundRank.handRank
+		) {
+			return;
+		} else {
+			// set winner
+			const index = playersWithPoints.findIndex(
+				(player) => player.name === sortedPlayers[0].name
+			);
+			const index2 = playersWithPoints[index].totalPoints.length - 1;
+			playersWithPoints[index].totalPoints[index2] = 1;
+		}
+
+		console.log(index);
+		console.log(playersWithPoints[index].name);
 	};
 }
 
@@ -110,23 +210,24 @@ class Game {
 
 	dealer = new Dealer();
 
-	constructor() {}
-
 	startGame = function () {
 		if (this.players.length < 2) return;
 
 		//todo: check if there are cards left in deck
+
+		// deal cards
 		this.players.forEach(
 			(player) => (player.hand = this.dealer.dealCards(5))
 		);
-		this.players.forEach((player) =>
+		/* 		this.players.forEach((player) =>
 			console.log(`${player.hand.map((card) => card.cardIcon).join("")}`)
 		);
-
-		const winner = Validation.check(this.players);
-		console.log(
+ */
+		// store current rank of hands
+		this.players = Validation.check(this.players);
+		/* 		console.log(
 			`Winner is ${winner[0].name} with ${winner[0].points} points`
-		);
+		); */
 	};
 
 	addPlayer = function (playerName) {
@@ -188,13 +289,24 @@ const controlDiscardCards = function (cardHands) {
 	//ta bort kort ur hand
 	game.discardCards(cardsToDiscard);
 
+	// store current rank of hands
+	game.players = Validation.check(game.players);
+
+	// determine winner of round
+	Validation.win(game.players);
+
 	// rerender game
 	pokerView.renderGame(game.players);
+};
+
+const controlNewRound = function () {
+	console.log("new round");
 };
 
 pokerView.addHandlerRender(controlAddNewPlayer);
 pokerView.addHandlerStartGame(controlStartGame);
 pokerView.addHandlerDiscardCards(controlDiscardCards);
+pokerView.addHandlerNewRound(controlNewRound);
 
 // game.addPlayer("Slim");
 // game.addPlayer("Luke");
