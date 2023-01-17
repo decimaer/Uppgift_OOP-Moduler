@@ -79,7 +79,7 @@ class Dealer extends Deck {
 
 class Player {
 	hand;
-	roundRank = { handName: "", handValue: 0, handRank: 0 };
+	roundRank;
 	totalPoints = [];
 
 	constructor(name) {
@@ -88,12 +88,12 @@ class Player {
 }
 
 class Validation {
-	static rankOfPokerHands = [
+	/* 	static rankOfPokerHands = [
 		"three of a kind",
 		"two pair",
 		"one pair",
 		"high card",
-	];
+	]; */
 
 	static sumOfCardValues = function (cards) {
 		return cards.reduce((acc, { value: cur }) => acc + cur, 0);
@@ -217,17 +217,21 @@ class Validation {
 class Game {
 	players = [];
 
-	dealer = new Dealer();
+	dealer;
 
 	startGame = function () {
 		if (this.players.length < 2) return;
 
-		//todo: check if there are cards left in deck
+		// create new deck
+		this.dealer = new Dealer();
+
+		// reset player hands
 
 		// deal cards
-		this.players.forEach(
-			(player) => (player.hand = this.dealer.dealCards(5))
-		);
+		this.players.forEach((player) => {
+			player.roundRank = { handName: "", handValue: 0, handRank: 0 };
+			player.hand = this.dealer.dealCards(5);
+		});
 		/* 		this.players.forEach((player) =>
 			console.log(`${player.hand.map((card) => card.cardIcon).join("")}`)
 		);
@@ -240,6 +244,8 @@ class Game {
 	};
 
 	addPlayer = function (playerName) {
+		if (this.players.length === 5) return;
+
 		this.players.push(new Player(playerName));
 	};
 
@@ -263,8 +269,6 @@ class Game {
 	}
 }
 
-const game = new Game();
-
 const controlAddNewPlayer = function (playerName) {
 	game.addPlayer(playerName);
 
@@ -277,10 +281,8 @@ const controlStartGame = function () {
 
 	pokerView.renderGame(game.players);
 
-	pokerView.addHandlerSelectCards(controlSelectCards);
+	pokerView.addHandlerSelectCards();
 };
-
-const controlSelectCards = function () {};
 
 const controlDiscardCards = function (cardHands) {
 	const cardsToDiscard = {};
@@ -303,6 +305,7 @@ const controlDiscardCards = function (cardHands) {
 
 	// determine winner of round
 	Validation.win(game.players);
+	pokerView.displayWin = true;
 
 	// rerender game
 	pokerView.renderGame(game.players);
@@ -310,7 +313,17 @@ const controlDiscardCards = function (cardHands) {
 
 const controlNewRound = function () {
 	console.log("new round");
+	pokerView.displayWin = false;
+
+	// start new game round
+	controlStartGame();
+
+	/* 
+	// reset buttons
+	pokerView.init(); */
 };
+
+const game = new Game();
 
 pokerView.addHandlerRender(controlAddNewPlayer);
 pokerView.addHandlerStartGame(controlStartGame);

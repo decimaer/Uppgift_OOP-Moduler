@@ -8,6 +8,8 @@ class PokerView {
 	outputPokerGame = document.getElementById("outputPokerGame");
 	outputNodes = document.getElementById("outputPokerGame").childNodes;
 
+	displayWin = false;
+
 	constructor() {
 		// Reinitialize buttons on startup. This is a bugfix when browser remembers attribute of buttons on page reload
 		this.removeDisableButton(this.btnStartGame);
@@ -34,6 +36,25 @@ class PokerView {
 			: "🂠🂠🂠🂠🂠";
 	}
 
+	#renderPoints(player) {
+		if (this.displayWin)
+			return `<span>${
+				player.totalPoints.at(-1) === 1 ? "- WINNER of round!" : ""
+			}</span>`;
+	}
+
+	#renderRankAndPoints(player) {
+		return `
+		<span class="playerRoundRank">   Ranking in round: ${
+			player.roundRank.handName
+		} of value ${player.roundRank.handValue}</span>
+		<span class="playerTotalPoints">   Total Points: ${
+			player.totalPoints.join(" ") ?? ""
+		}</span>
+		${this.#renderPoints(player) ?? ""}
+		`;
+	}
+
 	renderGame(playersArray) {
 		let markup = "";
 
@@ -42,13 +63,7 @@ class PokerView {
 				<div class="playerRow" id="${player.name}">
 				<span>${player.name.padEnd(15)}</span>
 				<span class="cardHand">${this.#renderCardHand(player)}</span>
-				<span class="playerRoundRank">   Ranking in round: ${
-					player.roundRank.handName
-				} of value ${player.roundRank.handValue}</span>
-				<span class="playerTotalPoints">   Total Points: ${
-					player.totalPoints.join(" ") ?? ""
-				}</span>
-				<span>${player.totalPoints.at(-1) === 1 ? "- WINNER of round!" : ""}</span>
+				${player.roundRank ? this.#renderRankAndPoints(player) : ""}
 				</div>
 			`;
 		});
@@ -107,9 +122,10 @@ class PokerView {
 	}
 
 	addHandlerSelectCards() {
+		console.log(this.outputNodes);
 		this.outputNodes.forEach((node) => {
 			if (!node.classList?.contains("playerRow")) return;
-
+			console.log("japp");
 			node.addEventListener("click", function (e) {
 				e.target.classList.toggle("selectedCard");
 			});
@@ -136,8 +152,19 @@ class PokerView {
 		);
 	}
 
+	#handlerNewRound(handler) {
+		// reset buttons
+		this.removeDisableButton(this.btnDiscardCards);
+		this.setDisableButton(this.btnNewRound);
+
+		handler();
+	}
+
 	addHandlerNewRound(handler) {
-		this.btnNewRound.addEventListener("click", handler);
+		this.btnNewRound.addEventListener(
+			"click",
+			this.#handlerNewRound.bind(this, handler)
+		);
 	}
 }
 
