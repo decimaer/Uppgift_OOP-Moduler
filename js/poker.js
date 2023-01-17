@@ -88,7 +88,7 @@ class Player {
 }
 
 class Validation {
-	static rankPokerHands = [
+	static rankOfPokerHands = [
 		"three of a kind",
 		"two pair",
 		"one pair",
@@ -102,6 +102,7 @@ class Validation {
 	static evaluateHand(hand) {
 		let cardsToEvaluate = [];
 
+		// Filter out the cards that have the same value
 		hand.forEach((card, i, arr) => {
 			const currentArray = [...arr];
 
@@ -115,17 +116,17 @@ class Validation {
 		if (cardsToEvaluate.length === 4)
 			return {
 				handName: "two pair",
-				handValue: this.sumOfCardValues(cardsToEvaluate),
+				handValue: 200 + this.sumOfCardValues(cardsToEvaluate),
 			};
 		if (cardsToEvaluate.length === 3)
 			return {
 				handName: "three of a kind",
-				handValue: this.sumOfCardValues(cardsToEvaluate),
+				handValue: 300 + this.sumOfCardValues(cardsToEvaluate),
 			};
 		if (cardsToEvaluate.length === 2)
 			return {
 				handName: "one pair",
-				handValue: this.sumOfCardValues(cardsToEvaluate),
+				handValue: 100 + this.sumOfCardValues(cardsToEvaluate),
 			};
 		else return undefined;
 	}
@@ -180,15 +181,24 @@ class Validation {
 			player.totalPoints.push(0);
 		});
 
+		console.log(playersWithPoints);
+		// check which rank is highest
+		const sortedPlayers = [...playersWithPoints].sort((a, b) => {
+			console.log(a.roundRank.handValue, b.roundRank.handValue);
+			return b.roundRank.handValue - a.roundRank.handValue;
+		});
+
+		console.log(sortedPlayers);
+
+		// if two or more ranks are equal, compare value
+		// sortedPlayers =
+
 		// Sort array to determine winner
-		const sortedPlayers = [...playersWithPoints].sort(
-			(a, b) => a.roundRank.handRank - b.roundRank.handRank
-		);
 
 		// if at least two top ranked players have the same rank, it's a tie, and noone wins
 		if (
-			playersWithPoints[0].roundRank.handRank ===
-			playersWithPoints[1].roundRank.handRank
+			sortedPlayers[0].roundRank.handValue ===
+			sortedPlayers[1].roundRank.handValue
 		) {
 			return;
 		} else {
@@ -198,10 +208,9 @@ class Validation {
 			);
 			const index2 = playersWithPoints[index].totalPoints.length - 1;
 			playersWithPoints[index].totalPoints[index2] = 1;
+			console.log(index);
+			console.log(playersWithPoints[index].name);
 		}
-
-		console.log(index);
-		console.log(playersWithPoints[index].name);
 	};
 }
 
@@ -322,6 +331,9 @@ console.log(Validation.check([slim, luke])) */
 const devInit = function () {
 	controlAddNewPlayer("Slim");
 	controlAddNewPlayer("Luke");
+	controlAddNewPlayer("Fluke");
+	controlAddNewPlayer("Duke");
+	controlAddNewPlayer("Tuke");
 };
 devInit();
 

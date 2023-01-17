@@ -48,7 +48,7 @@ class PokerView {
 				<span class="playerTotalPoints">   Total Points: ${
 					player.totalPoints.join(" ") ?? ""
 				}</span>
-				<span>${player.totalPoints.at(-1) === 1 ? "WINNER" : ""}</span>
+				<span>${player.totalPoints.at(-1) === 1 ? "- WINNER of round!" : ""}</span>
 				</div>
 			`;
 		});
