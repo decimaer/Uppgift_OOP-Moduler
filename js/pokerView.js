@@ -3,7 +3,6 @@ class PokerView {
 	btnAddPlayer = document.getElementById("btnAddPlayer");
 	btnStartGame = document.getElementById("btnStartGame");
 	btnDiscardCards = document.getElementById("btnDiscardCards");
-	// btnEndRound = document.getElementById("btnEndRound");
 	btnNewRound = document.getElementById("btnNewRound");
 	outputPokerGame = document.getElementById("outputPokerGame");
 	outputNodes = document.getElementById("outputPokerGame").childNodes;
@@ -15,7 +14,6 @@ class PokerView {
 		this.removeDisableButton(this.btnStartGame);
 		this.removeDisableButton(this.btnAddPlayer);
 		this.setDisableButton(this.btnDiscardCards);
-		// this.setDisableButton(this.btnEndRound);
 		this.setDisableButton(this.btnNewRound);
 	}
 
@@ -70,14 +68,6 @@ class PokerView {
 		this.outputPokerGame.innerHTML = markup;
 	}
 
-	/* 	toggleDisableButton(button) {
-		if (button.getAttribute("disabled") === null) {
-			button.setAttribute("disabled", "");
-		} else {
-			button.removeAttribute("disabled");
-		}
-	}
- */
 	removeDisableButton(button) {
 		button.removeAttribute("disabled");
 	}
@@ -104,13 +94,8 @@ class PokerView {
 	#startGame(handler) {
 		handler();
 
-		// this.toggleDisableButton(this.btnStartGame);
 		this.setDisableButton(this.btnStartGame);
-
-		// this.toggleDisableButton(this.btnDiscardCards);
 		this.removeDisableButton(this.btnDiscardCards);
-
-		// this.toggleDisableButton(this.btnAddPlayer);
 		this.setDisableButton(this.btnAddPlayer);
 	}
 
@@ -137,11 +122,7 @@ class PokerView {
 
 		handler(cardHands);
 
-		// this.toggleDisableButton(this.btnDiscardCards);
 		this.setDisableButton(this.btnDiscardCards);
-
-		// this.toggleDisableButton(this.btnEndRound);
-		// this.removeDisableButton(this.btnEndRound);
 		this.removeDisableButton(this.btnNewRound);
 	}
 

@@ -88,13 +88,6 @@ class Player {
 }
 
 class Validation {
-	/* 	static rankOfPokerHands = [
-		"three of a kind",
-		"two pair",
-		"one pair",
-		"high card",
-	]; */
-
 	static sumOfCardValues = function (cards) {
 		return cards.reduce((acc, { value: cur }) => acc + cur, 0);
 	};
@@ -150,27 +143,9 @@ class Validation {
 				return player;
 			}
 		});
-		console.log(rankedPlayers);
-		// evaluate which player has the highest hand. If players have the same, check the hand's highest card and so on.
-
-		// rankedPlayers.forEach((player, _, players) => {});
-
-		// const sortedPlayers = [...rankedPlayers].sort((a, b) => {
-		// 	if (a.roundRank === b.roundRank) {
-		// 	}
-		// });
 
 		// return array of ranking of players hands.
 		return rankedPlayers;
-		/* 		if (!player) return;
-
-		const rankingHands = player
-			.map((player) => {
-				return { name: player.name, points: this.sumOfRanks(player.hand) };
-			})
-			.sort((a, b) => b.points - a.points);
-
-		return rankingHands; */
 	};
 
 	//return array of players with totalPoints array, add 1 for win or 0 for lose
@@ -181,19 +156,10 @@ class Validation {
 			player.totalPoints.push(0);
 		});
 
-		console.log(playersWithPoints);
 		// check which rank is highest
 		const sortedPlayers = [...playersWithPoints].sort((a, b) => {
-			console.log(a.roundRank.handValue, b.roundRank.handValue);
 			return b.roundRank.handValue - a.roundRank.handValue;
 		});
-
-		console.log(sortedPlayers);
-
-		// if two or more ranks are equal, compare value
-		// sortedPlayers =
-
-		// Sort array to determine winner
 
 		// if at least two top ranked players have the same rank, it's a tie, and noone wins
 		if (
@@ -232,15 +198,9 @@ class Game {
 			player.roundRank = { handName: "", handValue: 0, handRank: 0 };
 			player.hand = this.dealer.dealCards(5);
 		});
-		/* 		this.players.forEach((player) =>
-			console.log(`${player.hand.map((card) => card.cardIcon).join("")}`)
-		);
- */
+
 		// store current rank of hands
 		this.players = Validation.check(this.players);
-		/* 		console.log(
-			`Winner is ${winner[0].name} with ${winner[0].points} points`
-		); */
 	};
 
 	addPlayer = function (playerName) {
@@ -317,10 +277,6 @@ const controlNewRound = function () {
 
 	// start new game round
 	controlStartGame();
-
-	/* 
-	// reset buttons
-	pokerView.init(); */
 };
 
 const game = new Game();
@@ -330,24 +286,10 @@ pokerView.addHandlerStartGame(controlStartGame);
 pokerView.addHandlerDiscardCards(controlDiscardCards);
 pokerView.addHandlerNewRound(controlNewRound);
 
-// game.addPlayer("Slim");
-// game.addPlayer("Luke");
-
-// game.startGame();
-
-console.log(game.players);
-/* let slim = dealer.dealCards(5)
-let luke = dealer.dealCards(5)
-console.log(Validation.check([slim, luke])) */
-
 // For dev purposes
 const devInit = function () {
 	controlAddNewPlayer("Slim");
 	controlAddNewPlayer("Luke");
 	controlAddNewPlayer("Fluke");
-	controlAddNewPlayer("Duke");
-	controlAddNewPlayer("Tuke");
 };
 devInit();
-
-console.log(pokerView.outputNodes);
