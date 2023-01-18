@@ -107,10 +107,9 @@ class PokerView {
 	}
 
 	addHandlerSelectCards() {
-		console.log(this.outputNodes);
 		this.outputNodes.forEach((node) => {
 			if (!node.classList?.contains("playerRow")) return;
-			console.log("japp");
+
 			node.addEventListener("click", function (e) {
 				e.target.classList.toggle("selectedCard");
 			});
