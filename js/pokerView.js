@@ -17,10 +17,6 @@ class PokerView {
 		this.setDisableButton(this.btnNewRound);
 	}
 
-	/**
-	 * Renders the game in the DOM
-	 * @param {Array} playersArray the array of player objects from the game object
-	 */
 	#renderCardHand(player) {
 		return player.hand
 			? player.hand

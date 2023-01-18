@@ -125,7 +125,7 @@ export class Validation {
 	}
 
 	static check = function (players) {
-		// check which is the highest hand, and return point
+		// check which is the highest hand
 		const rankedPlayers = players.map((player) => {
 			const evaluatedHand = this.evaluateHand(player.hand);
 
@@ -140,7 +140,7 @@ export class Validation {
 			}
 		});
 
-		// return array of ranking of players hands.
+		// return updated array of players.
 		return rankedPlayers;
 	};
 
@@ -152,12 +152,12 @@ export class Validation {
 			player.totalPoints.push(0);
 		});
 
-		// check which rank is highest
+		// sort highest rank to top
 		const sortedPlayers = [...playersWithPoints].sort((a, b) => {
 			return b.roundRank.handValue - a.roundRank.handValue;
 		});
 
-		// if at least two top ranked players have the same rank, it's a tie, and noone wins
+		// if at least two top ranked players have the same rank, it's a tie, and no one wins
 		if (
 			sortedPlayers[0].roundRank.handValue ===
 			sortedPlayers[1].roundRank.handValue
@@ -184,8 +184,6 @@ class Game {
 
 		// create new deck
 		this.dealer = new Dealer();
-
-		// reset player hands
 
 		// deal cards
 		this.players.forEach((player) => {
